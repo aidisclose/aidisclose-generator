@@ -630,7 +630,8 @@ function getFormValues() {
 \\addbibresource{aidisclose.bib} % aidisclose generates this file automatically
 
 % Load aidisclose package
-\\usepackage[autobib=true]{aidisclose}
+% Set options to [autobib=false,nocite=true] to remove citations in the GenAI disclosure statement
+\\usepackage[autobib=true,nocite=false]{aidisclose}
 
 \\title{My Research Paper}
 \\author{${data.authors}}
