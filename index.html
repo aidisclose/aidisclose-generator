@@ -342,8 +342,8 @@
     </div>
 
     <div class="button-group">
-        <button class="btn-primary" onclick="generateLaTeX('full')">Generate Full LaTeX Document</button>
-        <button class="btn-secondary" onclick="generateLaTeX('snippet')">Generate Only Snippet</button>
+        <button class="btn-primary" onclick="generateLaTeX('full'); incrementGlobalCounter()">Generate Full LaTeX Document</button>
+        <button class="btn-secondary" onclick="generateLaTeX('snippet'); incrementGlobalCounter()">Generate Only Snippet</button>
     </div>
 
     <div id="output-area">
@@ -374,8 +374,9 @@
         Copyright © 2025-26 <a href="https://docentes.fct.unl.pt/joao-lourenco">João M. Lourenço</a>.<br/>
         Crafted with 🧡 for reproducible scientific writing.
     </div>
-</div>
-
+    <div id="counter-container" style="margin-top: 20px; font-family: monospace; color: #999;">
+        Total Declarations Generated: <span id="counter-value">Loading...</span>
+    </div>
 <script>
 
     // --- Dynamic comments ---
@@ -666,6 +667,59 @@ ${snippet}
             alert('Code copied to clipboard!');
         });
     }
+
+// -------------------------------------------
+// counter stuff
+// -------------------------------------------
+
+    // --- Dynamic comments (Keep your existing comment logic here) ---
+    // [ ... Paste your existing comment logic here if it's not already separate ... ]
+    // (If you kept the previous script structure, just replace the counter part below)
+    
+    // ==========================================
+    //       NEW COUNTER LOGIC (CounterAPI)
+    // ==========================================
+
+    // 1. Define your unique storage location
+    // We sanitize the hostname to remove special characters for the API
+    const rawNamespace = window.location.hostname || 'local-test'; 
+    const namespace = rawNamespace.replace(/[^a-zA-Z0-9]/g, '_'); 
+    const key = 'gaidet_button_clicks'; // underscores are safer for this API
+
+    // 2. Function to update the number on screen
+    function updateCounterUI(value) {
+        const counterElement = document.getElementById('counter-value');
+        if(counterElement) counterElement.innerText = value;
+    }
+
+    // 3. Fetch the current count immediately (Read-Only)
+    // usage: /v1/{namespace}/{key}/
+    fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/`)
+        .then(response => {
+            if (response.ok) return response.json();
+            throw new Error('Counter not found or error');
+        })
+        .then(data => updateCounterUI(data.count)) // Note: this API uses .count, not .value
+        .catch(err => {
+            console.warn('Counter read failed:', err);
+            updateCounterUI(0);
+        });
+
+    // 4. Function to increment the counter (Write)
+    // usage: /v1/{namespace}/{key}/up
+    function incrementGlobalCounter() {
+        fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
+            .then(response => {
+                if (response.ok) return response.json();
+                throw new Error('Increment failed');
+            })
+            .then(data => updateCounterUI(data.count))
+            .catch(error => console.error('Error updating counter:', error));
+    }
+    
+    // Note: Your buttons already have onclick="incrementGlobalCounter()", 
+    // so no extra event listeners are needed.
+    
 </script>
     
 </body>
