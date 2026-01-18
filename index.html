@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAIDeT Declaration Generator for LaTeX)</title>
+    <title>Generative AI Disclosure Statement Generator for LaTeX</title>
     <style>
         :root {
             --primary-color: #0056b3;
@@ -150,10 +150,10 @@
 <body>
 
 <div class="container">
-    <h1>GAIDeT Declaration Generator for LaTeX</h1>
+    <h1>Generative AI Disclosure Statement Generator for LaTeX</h1>
     <p>Generate LaTeX code for the 
         <a href="https://github.com/joaomlourenco/aidisclose"><code>aidisclose</code></a> 
-        package, based on the GAIDeT taxonomy.</p>
+        package, which extends the GAIDeT taxonomy.</p>
     
     <p style="font-size: 0.65em; color: #555;">
       GAIDeT: Suchikova, Y., Tsybuliak, N., Teixeira da Silva, J. A., &amp; Nazarovets, S. (2025).
@@ -192,12 +192,12 @@
         </a>
     </p>
 
-    <div class="form-section">
+<div class="form-section">
         <h2>1. General Information</h2>
-        
+       
         <label for="authors">Authors (Comma separated) *</label>
         <input type="text" id="authors" placeholder="e.g. Jane Doe, John Smith" required>
-        
+       
         <label for="tools">AI Tools Used</label>
         <input type="text" id="tools" placeholder="e.g. ChatGPT-4, GitHub Copilot, Grammarly">
         <span class="help-text">Leave empty if no specific tools need to be listed.</span>
@@ -211,91 +211,116 @@
                 onclick="addCommentBox()">
             Add another comment
         </button>
-</div>
+    </div>
 
     <div class="form-section">
-        <h2>2. Taxonomy of Tasks (GAIDeT)</h2>
-        <p class="help-text">Select the tasks delegated to Generative AI.</p>
+        <h2>2. Taxonomy of Tasks</h2>
+        <p class="help-text">Select the tasks partially delegated to Generative AI.</p>
 
         <div class="taxonomy-group">
             <h3>Conceptualization</h3>
             <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="c:idea" class="tax-check"> Idea generation</div>
-                <div class="checkbox-item"><input type="checkbox" value="c:objective" class="tax-check"> Defining research objective</div>
-                <div class="checkbox-item"><input type="checkbox" value="c:rq" class="tax-check"> Research questions/hypotheses</div>
-                <div class="checkbox-item"><input type="checkbox" value="c:feas" class="tax-check"> Feasibility assessment</div>
-                <div class="checkbox-item"><input type="checkbox" value="c:pretest" class="tax-check"> Preliminary hypothesis testing</div>
+                <div class="checkbox-item"><input type="checkbox" value="c_idea" class="tax-check"> Idea generation</div>
+                <div class="checkbox-item"><input type="checkbox" value="c_obj" class="tax-check"> Defining the research objective</div>
+                <div class="checkbox-item"><input type="checkbox" value="c_rq" class="tax-check"> Formulating research questions and hypotheses</div>
+                <div class="checkbox-item"><input type="checkbox" value="c_feas" class="tax-check"> Feasibility assessment and risk evaluation</div>
+                <div class="checkbox-item"><input type="checkbox" value="c_pre" class="tax-check"> Hypothesis viability assessment</div>
+                <div class="checkbox-item"><input type="checkbox" value="c_sim" class="tax-check"> Simulated debate and argument testing</div>
             </div>
         </div>
 
         <div class="taxonomy-group">
             <h3>Literature Review</h3>
             <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="l:search" class="tax-check"> Lit search & systematization</div>
-                <div class="checkbox-item"><input type="checkbox" value="l:write" class="tax-check"> Writing literature review</div>
-                <div class="checkbox-item"><input type="checkbox" value="l:patents" class="tax-check"> Market trends / Patents</div>
-                <div class="checkbox-item"><input type="checkbox" value="l:gaps" class="tax-check"> Gap identification</div>
+                <div class="checkbox-item"><input type="checkbox" value="l_srch" class="tax-check"> Search and Discovery</div>
+                <div class="checkbox-item"><input type="checkbox" value="l_sum" class="tax-check"> Literature summarization and synthesis</div>
+                <div class="checkbox-item"><input type="checkbox" value="l_map" class="tax-check"> Concept Mapping and Systematization</div>
+                <div class="checkbox-item"><input type="checkbox" value="l_pat" class="tax-check"> Market/patent landscape analysis</div>
+                <div class="checkbox-item"><input type="checkbox" value="l_gaps" class="tax-check"> Gap Identification and Novelty Evaluation</div>
+                <div class="checkbox-item"><input type="checkbox" value="l_trans" class="tax-check"> Cross-lingual literature comprehension</div>
             </div>
         </div>
 
         <div class="taxonomy-group">
             <h3>Methodology</h3>
             <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="m:design" class="tax-check"> Research design</div>
-                <div class="checkbox-item"><input type="checkbox" value="m:protocols" class="tax-check"> Protocols</div>
-                <div class="checkbox-item"><input type="checkbox" value="m:methods" class="tax-check"> Selection of methods</div>
+                <div class="checkbox-item"><input type="checkbox" value="m_des" class="tax-check"> Experimental Design Optimization</div>
+                <div class="checkbox-item"><input type="checkbox" value="m_proto" class="tax-check"> Development of experimental or research protocols</div>
+                <div class="checkbox-item"><input type="checkbox" value="m_meth" class="tax-check"> Methodological Instrument Selection</div>
             </div>
         </div>
 
         <div class="taxonomy-group">
-            <h3>Software Development</h3>
+            <h3>Software Development and Automation</h3>
             <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="s:codegen" class="tax-check"> Code generation</div>
-                <div class="checkbox-item"><input type="checkbox" value="s:opt" class="tax-check"> Code optimization</div>
-                <div class="checkbox-item"><input type="checkbox" value="s:auto" class="tax-check"> Process automation</div>
-                <div class="checkbox-item"><input type="checkbox" value="s:algs" class="tax-check"> Algorithms for data analysis</div>
+                <div class="checkbox-item"><input type="checkbox" value="s_gen" class="tax-check"> Code Generation</div>
+                <div class="checkbox-item"><input type="checkbox" value="s_opt" class="tax-check"> Refactoring and Optimization</div>
+                <div class="checkbox-item"><input type="checkbox" value="s_debug" class="tax-check"> Debugging and Repair</div>
+                <div class="checkbox-item"><input type="checkbox" value="s_auto" class="tax-check"> Process automation</div>
+                <div class="checkbox-item"><input type="checkbox" value="s_algs" class="tax-check"> Algorithm design</div>
+                <div class="checkbox-item"><input type="checkbox" value="s_doc" class="tax-check"> Code documentation and comment generation</div>
             </div>
         </div>
 
         <div class="taxonomy-group">
             <h3>Data Management</h3>
             <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="d:collect" class="tax-check"> Data collection</div>
-                <div class="checkbox-item"><input type="checkbox" value="d:validate" class="tax-check"> Validation</div>
-                <div class="checkbox-item"><input type="checkbox" value="d:clean" class="tax-check"> Data cleaning</div>
-                <div class="checkbox-item"><input type="checkbox" value="d:curate" class="tax-check"> Curation</div>
-                <div class="checkbox-item"><input type="checkbox" value="d:analyze" class="tax-check"> Data analysis</div>
-                <div class="checkbox-item"><input type="checkbox" value="d:viz" class="tax-check"> Visualization</div>
-                <div class="checkbox-item"><input type="checkbox" value="d:repro" class="tax-check"> Reproducibility testing</div>
+                <div class="checkbox-item"><input type="checkbox" value="d_coll" class="tax-check"> Data collection</div>
+                <div class="checkbox-item"><input type="checkbox" value="d_val" class="tax-check"> Validation</div>
+                <div class="checkbox-item"><input type="checkbox" value="d_cln" class="tax-check"> Data cleaning</div>
+                <div class="checkbox-item"><input type="checkbox" value="d_cur" class="tax-check"> Data curation and organization</div>
+                <div class="checkbox-item"><input type="checkbox" value="d_anl" class="tax-check"> Data analysis</div>
+                <div class="checkbox-item"><input type="checkbox" value="d_viz" class="tax-check"> Quantitative Plotting and Charting</div>
+                <div class="checkbox-item"><input type="checkbox" value="d_rep" class="tax-check"> Reproducibility and rerun checks</div>
+                <div class="checkbox-item"><input type="checkbox" value="d_lbl" class="tax-check"> Data labeling and annotation assistance</div>
+                <div class="checkbox-item"><input type="checkbox" value="d_syn" class="tax-check"> Synthetic data generation</div>
+                <div class="checkbox-item"><input type="checkbox" value="d_anon" class="tax-check"> De-identification and anonymization support</div>
+                <div class="checkbox-item"><input type="checkbox" value="d_trans" class="tax-check"> Audio-to-text transcription and diarization</div>
+            </div>
+        </div>
+
+        <div class="taxonomy-group">
+            <h3>Visuals and Multimedia</h3>
+            <div class="checkbox-grid">
+                <div class="checkbox-item"><input type="checkbox" value="v_gen" class="tax-check"> Synthetic Asset Generation</div>
+                <div class="checkbox-item"><input type="checkbox" value="v_edit" class="tax-check"> Image Enhancement and Editing</div>
+                <div class="checkbox-item"><input type="checkbox" value="v_chart" class="tax-check"> Diagrammatic and Schematic Design</div>
             </div>
         </div>
 
         <div class="taxonomy-group">
             <h3>Writing and Editing</h3>
             <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="w:textgen" class="tax-check"> Text generation</div>
-                <div class="checkbox-item"><input type="checkbox" value="w:proof" class="tax-check"> Proofreading & editing</div>
-                <div class="checkbox-item"><input type="checkbox" value="w:summarize" class="tax-check"> Summarizing text</div>
-                <div class="checkbox-item"><input type="checkbox" value="w:concl" class="tax-check"> Formulation of conclusions</div>
-                <div class="checkbox-item"><input type="checkbox" value="w:tone" class="tax-check"> Tone adjustment</div>
-                <div class="checkbox-item"><input type="checkbox" value="w:translate" class="tax-check"> Translation</div>
-                <div class="checkbox-item"><input type="checkbox" value="w:reformat" class="tax-check"> Reformatting</div>
-                <div class="checkbox-item"><input type="checkbox" value="w:press" class="tax-check"> Press releases</div>
+                <div class="checkbox-item"><input type="checkbox" value="w_draft" class="tax-check"> Drafting Text</div>
+                <div class="checkbox-item"><input type="checkbox" value="w_poly" class="tax-check"> Polishing and Editing</div>
+                <div class="checkbox-item"><input type="checkbox" value="w_title" class="tax-check"> Title Generation</div>
+                <div class="checkbox-item"><input type="checkbox" value="w_sum" class="tax-check"> Abstract and Executive Summary Generation</div>
+                <div class="checkbox-item"><input type="checkbox" value="w_con" class="tax-check"> Formulation of conclusions</div>
+                <div class="checkbox-item"><input type="checkbox" value="w_ref" class="tax-check"> Citation formatting and bibliography management</div>
+                <div class="checkbox-item"><input type="checkbox" value="w_tone" class="tax-check"> Tone Adjustment</div>
+                <div class="checkbox-item"><input type="checkbox" value="w_tra" class="tax-check"> Translation</div>
+                <div class="checkbox-item"><input type="checkbox" value="w_prs" class="tax-check"> Press releases and outreach materials</div>
             </div>
         </div>
 
         <div class="taxonomy-group">
-            <h3>Ethics & Supervision</h3>
+            <h3>Ethics Review</h3>
             <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="e:bias" class="tax-check"> Bias analysis</div>
-                <div class="checkbox-item"><input type="checkbox" value="e:risk" class="tax-check"> Ethical risk analysis</div>
-                <div class="checkbox-item"><input type="checkbox" value="e:compliance" class="tax-check"> Compliance monitoring</div>
-                <div class="checkbox-item"><input type="checkbox" value="e:conf" class="tax-check"> Confidentiality monitoring</div>
-                <div class="checkbox-item"><input type="checkbox" value="sup:qa" class="tax-check"> Quality assessment</div>
-                <div class="checkbox-item"><input type="checkbox" value="sup:trends" class="tax-check"> Trend identification</div>
-                <div class="checkbox-item"><input type="checkbox" value="sup:limits" class="tax-check"> ID of limitations</div>
-                <div class="checkbox-item"><input type="checkbox" value="sup:recs" class="tax-check"> Recommendations</div>
-                <div class="checkbox-item"><input type="checkbox" value="sup:pub" class="tax-check"> Publication support</div>
+                <div class="checkbox-item"><input type="checkbox" value="e_bias" class="tax-check"> Bias analysis and discrimination assessment</div>
+                <div class="checkbox-item"><input type="checkbox" value="e_risk" class="tax-check"> Ethical risk analysis</div>
+                <div class="checkbox-item"><input type="checkbox" value="e_comp" class="tax-check"> Monitoring compliance with ethical standards</div>
+                <div class="checkbox-item"><input type="checkbox" value="e_conf" class="tax-check"> Data confidentiality monitoring</div>
+            </div>
+        </div>
+
+        <div class="taxonomy-group">
+            <h3>Quality Assurance</h3>
+            <div class="checkbox-grid">
+                <div class="checkbox-item"><input type="checkbox" value="sup_qa" class="tax-check"> Simulated Peer Review</div>
+                <div class="checkbox-item"><input type="checkbox" value="sup_trd" class="tax-check"> Consistency checking against field trends</div>
+                <div class="checkbox-item"><input type="checkbox" value="sup_lim" class="tax-check"> Identification of limitations</div>
+                <div class="checkbox-item"><input type="checkbox" value="sup_rec" class="tax-check"> Publication strategy and journal selection</div>
+                <div class="checkbox-item"><input type="checkbox" value="sup_pub" class="tax-check"> Publication support</div>
             </div>
         </div>
     </div>
@@ -588,9 +613,9 @@ function getFormValues() {
         // 5. Render Command
         code += `% --- Render Declaration ---\n`;
         if (commentRender) {
-            code += `% \\GAIrenderDeclaration[${data.columns}]{${data.authors}}\\n`;
+            code += `% \\GAIrenderDeclaration[${data.columns}]{${data.authors}}\n`;
         } else {
-            code += `\\GAIrenderDeclaration[${data.columns}]{${data.authors}}\\n`;
+            code += `\\GAIrenderDeclaration[${data.columns}]{${data.authors}}\n`;
         }
         return code;
     }
