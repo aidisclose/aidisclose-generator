@@ -13,6 +13,8 @@
             /* Professional Palette */
             --primary: #2563eb;       /* Royal Blue */
             --primary-hover: #1d4ed8;
+            --novathesis-button: #638852;
+            --novathesis-hover: #739862;
             --surface: #ffffff;
             --background: #f1f5f9;    /* Slate 100 */
             --text-main: #0f172a;     /* Slate 900 */
@@ -252,6 +254,15 @@
             background-color: #f8fafc;
             color: var(--text-main);
             border-color: #cbd5e1;
+        }
+        .btn-novathesis {
+            background-color: var(--novathesis-button);
+            color: white;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+        .btn-novathesis:hover {
+            background-color: var(--novathesis-hover);
+            transform: translateY(-1px);
         }
         .btn-danger {
             background-color: #fee2e2;
@@ -513,6 +524,7 @@
     <div class="button-group">
         <button type="button" class="btn-primary" onclick="generateLaTeX()">Generate Full Document</button>
         <button type="button" class="btn-secondary" onclick="generateSnippet()">Generate Snippet Only</button>
+        <button type="button" class="btn-novathesis" onclick="generateNovaThesis()">Generate <a href="https://github.com/joaomlourenco/novathesis">NOVAthesis</a> <pre>7_aidisclose.tex</pre></button>
     </div>
 
     <div id="output-area">
@@ -617,12 +629,21 @@
         return { authors, tools, comments, autobib, nocite, titleFull, titleShort, titleLevel, columns, renderStar, taxonomy, renderLang, renderLabel };
     }
 
-    function validate(data) {
-        if (!data.authors) {
+    function validate(data, requireAuthors = true) {
+        // 1. Validate Authors (only if required for the specific button)
+        if (requireAuthors && !data.authors) {
             alert("Please enter the Author names.");
             document.getElementById('authors').focus();
             return false;
         }
+
+        // 2. Validate Tools (required if any taxonomy checkbox is checked)
+        if (data.taxonomy.length > 0 && !data.tools) {
+            alert("Because you selected specific tasks in the Taxonomy, you must specify the 'AI Tools Used'.");
+            document.getElementById('tools').focus();
+            return false;
+        }
+
         return true;
     }
 
@@ -691,7 +712,8 @@
 
     function generateLaTeX() {
         const data = getFormData();
-        if (!validate(data)) return;
+        // Authors REQUIRED
+        if (!validate(data, true)) return;
         incrementGlobalCounter();
 
         let code = `\\documentclass{article}\n`;
@@ -712,7 +734,8 @@
 
     function generateSnippet() {
         const data = getFormData();
-        if (!validate(data)) return;
+        // Authors REQUIRED
+        if (!validate(data, true)) return;
         incrementGlobalCounter();
 
         let code = `% Add to Preamble:\n`;
@@ -725,6 +748,21 @@
         displayOutput(code);
     }
 
+    function generateNovaThesis() {
+        const data = getFormData();
+        // Authors NOT REQUIRED
+        if (!validate(data, false)) return;
+        incrementGlobalCounter();
+
+        // We only generate the configuration body.
+        // Preamble (usepackage) and Rendering (AIDrenderDeclaration) are excluded.
+        let code = `% Content for 7_aidisclose.tex\n`;
+        code += `% The package import and rendering command are handled by the main template.\n\n`;
+        code += buildConfiguration(data);
+
+        displayOutput(code);
+    }
+        
     function displayOutput(code) {
         document.getElementById('latex-code').textContent = code;
         const area = document.getElementById('output-area');
