@@ -3,749 +3,721 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generative AI Disclosure Statement Generator for LaTeX</title>
+    <title>AIDisclose Statement Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-color: #0056b3;
-            --bg-color: #f4f4f9;
-            --border-color: #ddd;
+            /* Professional Palette */
+            --primary: #2563eb;       /* Royal Blue */
+            --primary-hover: #1d4ed8;
+            --surface: #ffffff;
+            --background: #f1f5f9;    /* Slate 100 */
+            --text-main: #0f172a;     /* Slate 900 */
+            --text-secondary: #475569; /* Slate 600 */
+            --border: #e2e8f0;        /* Slate 200 */
+            --border-focus: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --radius: 8px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            background-color: var(--bg-color);
-            color: #333;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--background);
+            color: var(--text-main);
+            line-height: 1.5;
+            margin: 0;
+            padding: 40px 20px;
         }
-        h1, h2, h3 { color: #2c3e50; }
+
         .container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            margin: 0 auto;
         }
-        
-        /* Form Layout */
-        .form-section { margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
-        label { display: block; font-weight: 600; margin-bottom: 5px; }
-        input[type="text"], input[type="number"], textarea, select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-color);
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            letter-spacing: -0.025em;
+        }
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .subtitle code {
+            background: #e0e7ff;
+            color: var(--primary);
+            padding: 2px 6px;
             border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .help-text { font-size: 0.85em; color: #666; margin-top: -10px; margin-bottom: 10px; display: block; }
-        
-        /* Taxonomy Grid */
-        .taxonomy-group {
-            margin-bottom: 20px;
-            background: #fafafa;
-            padding: 15px;
-            border-radius: 6px;
-            border: 1px solid #eee;
-        }
-        .taxonomy-group h3 { margin-top: 0; font-size: 1.1em; border-bottom: 2px solid var(--primary-color); display: inline-block; padding-bottom: 3px; }
-        .checkbox-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 10px;
-        }
-        .checkbox-item {
-            display: flex;
-            align-items: flex-start;
             font-size: 0.9em;
         }
-        .checkbox-item input { margin-right: 8px; margin-top: 5px; }
 
-        /* Buttons & Output */
-        .button-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+        /* --- Cards & Sections --- */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 1.25rem;
             font-weight: 600;
-            font-size: 1em;
-            transition: background 0.2s;
-        }
-        .btn-primary { background-color: var(--primary-color); color: white; }
-        .btn-primary:hover { background-color: #004494; }
-        .btn-secondary { background-color: #6c757d; color: white; }
-        .btn-secondary:hover { background-color: #5a6268; }
-        
-        #output-area {
-            margin-top: 30px;
-            display: none;
-        }
-        pre {
-            background: #272822;
-            color: #f8f8f2;
-            padding: 15px;
-            border-radius: 6px;
-            overflow-x: auto;
-            white-space: pre-wrap;
-        }
-    
-        /* Comments (dynamic) */
-        .comment-box {
-            border: 1px solid #ddd;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            background: #fafafa;
-        }
-        .comment-box textarea {
-            margin-bottom: 8px;
-        }
-
-
-        .comment-header {
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
             display: flex;
             align-items: center;
-            justify-content: space-between;
             gap: 10px;
+        }
+        h2::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        /* --- Forms --- */
+        .form-grid {
+            display: grid;
+            gap: 20px;
+        }
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 600px) { .row { grid-template-columns: 1fr; } }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+        .help-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        input[type="text"], input[type="number"], textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            color: var(--text-main);
+            font-family: inherit;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            box-sizing: border-box;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* --- Custom Checkboxes --- */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+        .checkbox-wrapper span {
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        /* --- Taxonomy Grid Layout --- */
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .taxonomy-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 15px;
+        }
+        .taxonomy-card h3 {
+            margin: 0 0 12px 0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            font-weight: 700;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+        .tax-item {
+            display: flex;
+            align-items: flex-start;
             margin-bottom: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .tax-item:hover {
+            color: var(--primary);
+        }
+        .tax-item input {
+            margin-top: 4px;
+            margin-right: 8px;
+            accent-color: var(--primary);
+        }
+
+        /* --- Dynamic Comments --- */
+        .comment-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--primary);
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            animation: fadeIn 0.3s ease;
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
         .comment-title {
             font-weight: 600;
-            font-size: 0.95em;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
-        .comment-actions {
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Buttons --- */
+        .button-group {
             display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background-color: white;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background-color: #f8fafc;
+            color: var(--text-main);
+            border-color: #cbd5e1;
+        }
+        .btn-danger {
+            background-color: #fee2e2;
+            color: var(--danger);
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        .btn-danger:hover { background-color: #fecaca; }
+
+        /* --- Output Area --- */
+        #output-area {
+            display: none;
+            margin-top: 40px;
+            scroll-margin-top: 20px;
+        }
+        .code-container {
+            background: #1e1e1e; /* Dark theme */
+            border-radius: var(--radius);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        .code-header {
+            background: #2d2d2d;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            color: #ccc;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #444;
         }
-        .drag-handle {
-            cursor: grab;
-            user-select: none;
-            padding: 2px 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: #fff;
-            font-size: 0.9em;
-        }
-        .comment-box.dragging {
-            opacity: 0.6;
-        }
-
-        .sponsors {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 24px;
-        }
-
-        .sponsors h2 {
-          flex-basis: 100%;
-          margin-bottom: -10px;
+        pre {
+            margin: 0;
+            padding: 20px;
+            color: #d4d4d4;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
         
-</style>
+        /* --- Footer/Sponsors --- */
+        .footer-sponsor {
+            margin-top: 50px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            padding-top: 30px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .counter-badge {
+            background: #e2e8f0;
+            color: var(--text-secondary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Generative AI Disclosure Statement Generator for LaTeX</h1>
-    <p>Generate LaTeX code for the 
-        <a href="https://github.com/joaomlourenco/aidisclose"><code>aidisclose</code></a> 
-        package, which extends the GAIDeT taxonomy.</p>
     
-    <p style="font-size: 0.65em; color: #555;">
-      GAIDeT: Suchikova, Y., Tsybuliak, N., Teixeira da Silva, J. A., &amp; Nazarovets, S. (2025).
-      <em>GAIDeT (Generative AI Delegation Taxonomy): A taxonomy for humans to delegate tasks to generative artificial intelligence in scientific research and publishing.</em>
-      <em>Accountability in Research</em>, 1–27.
-      <a href="https://doi.org/10.1080/08989621.2025.2544331" target="_blank" rel="noopener">
-        https://doi.org/10.1080/08989621.2025.2544331
-      </a>
-    </p>
-    
-    <p>For a quick start:
-        <ol>
-            <li>Fill the form and clink on the blue button <code>Generate Full LaTeX Document</code>;</li>
-            <li>Copy the LaTeX code to the clipboard and save it;</li>
-            <li>Download the file
-                <a href="https://raw.githubusercontent.com/joaomlourenco/aidisclose/refs/heads/main/aidisclose.sty">
-                    <code>aidisclose.sty</code>
-                </a>
-                and move it to the same folder/directory;</li>
-            <li>Compile your LaTeX file with <code>latexmk -pdf your_filename.tex</code>.</li>
-        </ol>  
-    </p>
-    <p>When using only the code snippet, remmeber to add <code>\usepackage{aidisclose}</code> to the top of your LaTeX file.</p>
-    <p><em>Please help keeping this web site alive!</em><br/>
-        <a href="https://www.paypal.com/donate/?hosted_button_id=8WA8FRVMB78W8"
-           target="_blank"
-           rel="noopener">
-          <img src="https://github.com/user-attachments/assets/8434a462-3599-4d3c-a2fd-04995db03fe3" width="100" />
-        </a>        
-        <br/>
-        <a href="https://www.paypal.com/donate/?hosted_button_id=8WA8FRVMB78W8"
-           target="_blank"
-           rel="noopener">
-          <img src="https://img.shields.io/badge/SAY%20THANKS-€5-orange.svg"
-               alt="SAY THANKS – €5">
-        </a>
-    </p>
+    <header>
+        <h1>Generative AI Disclosure Generator</h1>
+        <p class="subtitle">
+            Generate compliant LaTeX code for the <code>aidisclose</code> package.
+        </p>
+    </header>
 
-<div class="form-section">
-        <h2>1. General Information</h2>
-       
-        <label for="authors">Authors (Comma separated) *</label>
-        <input type="text" id="authors" placeholder="e.g. Jane Doe, John Smith" required>
-       
-        <label for="tools">AI Tools Used</label>
-        <input type="text" id="tools" placeholder="e.g. ChatGPT-4, GitHub Copilot, Grammarly">
-        <span class="help-text">Leave empty if no specific tools need to be listed.</span>
-        <label>Comments (Optional)</label>
-
-        <div id="comments-container"></div>
-
-        <button type="button"
-                class="btn-secondary"
-                style="margin-top:10px;"
-                onclick="addCommentBox()">
-            Add another comment
-        </button>
-    </div>
-
-    <div class="form-section">
-        <h2>2. Taxonomy of Tasks</h2>
-        <p class="help-text">Select the tasks partially delegated to Generative AI.</p>
-
-        <div class="taxonomy-group">
-            <h3>Conceptualization</h3>
-            <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="c_idea" class="tax-check"> Idea generation</div>
-                <div class="checkbox-item"><input type="checkbox" value="c_obj" class="tax-check"> Defining the research objective</div>
-                <div class="checkbox-item"><input type="checkbox" value="c_rq" class="tax-check"> Formulating research questions and hypotheses</div>
-                <div class="checkbox-item"><input type="checkbox" value="c_feas" class="tax-check"> Feasibility assessment and risk evaluation</div>
-                <div class="checkbox-item"><input type="checkbox" value="c_pre" class="tax-check"> Hypothesis viability assessment</div>
-                <div class="checkbox-item"><input type="checkbox" value="c_sim" class="tax-check"> Simulated debate and argument testing</div>
+    <div class="card">
+        <h2>General Information</h2>
+        <div class="form-grid">
+            <div>
+                <label for="authors">Authors *</label>
+                <input type="text" id="authors" placeholder="e.g. Jane Doe, John Smith" required>
+                <span class="help-text">Full names of authors accepting responsibility.</span>
             </div>
-        </div>
-
-        <div class="taxonomy-group">
-            <h3>Literature Review</h3>
-            <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="l_srch" class="tax-check"> Search and Discovery</div>
-                <div class="checkbox-item"><input type="checkbox" value="l_sum" class="tax-check"> Literature summarization and synthesis</div>
-                <div class="checkbox-item"><input type="checkbox" value="l_map" class="tax-check"> Concept Mapping and Systematization</div>
-                <div class="checkbox-item"><input type="checkbox" value="l_pat" class="tax-check"> Market/patent landscape analysis</div>
-                <div class="checkbox-item"><input type="checkbox" value="l_gaps" class="tax-check"> Gap Identification and Novelty Evaluation</div>
-                <div class="checkbox-item"><input type="checkbox" value="l_trans" class="tax-check"> Cross-lingual literature comprehension</div>
+            <div>
+                <label for="tools">AI Tools Used</label>
+                <input type="text" id="tools" placeholder="e.g. ChatGPT-4, GitHub Copilot, Grammarly">
+                <span class="help-text">Comma separated list of tools.</span>
             </div>
-        </div>
-
-        <div class="taxonomy-group">
-            <h3>Methodology</h3>
-            <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="m_des" class="tax-check"> Experimental Design Optimization</div>
-                <div class="checkbox-item"><input type="checkbox" value="m_proto" class="tax-check"> Development of experimental or research protocols</div>
-                <div class="checkbox-item"><input type="checkbox" value="m_meth" class="tax-check"> Methodological Instrument Selection</div>
-            </div>
-        </div>
-
-        <div class="taxonomy-group">
-            <h3>Software Development and Automation</h3>
-            <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="s_gen" class="tax-check"> Code Generation</div>
-                <div class="checkbox-item"><input type="checkbox" value="s_opt" class="tax-check"> Refactoring and Optimization</div>
-                <div class="checkbox-item"><input type="checkbox" value="s_debug" class="tax-check"> Debugging and Repair</div>
-                <div class="checkbox-item"><input type="checkbox" value="s_auto" class="tax-check"> Process automation</div>
-                <div class="checkbox-item"><input type="checkbox" value="s_algs" class="tax-check"> Algorithm design</div>
-                <div class="checkbox-item"><input type="checkbox" value="s_doc" class="tax-check"> Code documentation and comment generation</div>
-            </div>
-        </div>
-
-        <div class="taxonomy-group">
-            <h3>Data Management</h3>
-            <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="d_coll" class="tax-check"> Data collection</div>
-                <div class="checkbox-item"><input type="checkbox" value="d_val" class="tax-check"> Validation</div>
-                <div class="checkbox-item"><input type="checkbox" value="d_cln" class="tax-check"> Data cleaning</div>
-                <div class="checkbox-item"><input type="checkbox" value="d_cur" class="tax-check"> Data curation and organization</div>
-                <div class="checkbox-item"><input type="checkbox" value="d_anl" class="tax-check"> Data analysis</div>
-                <div class="checkbox-item"><input type="checkbox" value="d_viz" class="tax-check"> Quantitative Plotting and Charting</div>
-                <div class="checkbox-item"><input type="checkbox" value="d_rep" class="tax-check"> Reproducibility and rerun checks</div>
-                <div class="checkbox-item"><input type="checkbox" value="d_lbl" class="tax-check"> Data labeling and annotation assistance</div>
-                <div class="checkbox-item"><input type="checkbox" value="d_syn" class="tax-check"> Synthetic data generation</div>
-                <div class="checkbox-item"><input type="checkbox" value="d_anon" class="tax-check"> De-identification and anonymization support</div>
-                <div class="checkbox-item"><input type="checkbox" value="d_trans" class="tax-check"> Audio-to-text transcription and diarization</div>
-            </div>
-        </div>
-
-        <div class="taxonomy-group">
-            <h3>Visuals and Multimedia</h3>
-            <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="v_gen" class="tax-check"> Synthetic Asset Generation</div>
-                <div class="checkbox-item"><input type="checkbox" value="v_edit" class="tax-check"> Image Enhancement and Editing</div>
-                <div class="checkbox-item"><input type="checkbox" value="v_chart" class="tax-check"> Diagrammatic and Schematic Design</div>
-            </div>
-        </div>
-
-        <div class="taxonomy-group">
-            <h3>Writing and Editing</h3>
-            <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="w_draft" class="tax-check"> Drafting Text</div>
-                <div class="checkbox-item"><input type="checkbox" value="w_poly" class="tax-check"> Polishing and Editing</div>
-                <div class="checkbox-item"><input type="checkbox" value="w_title" class="tax-check"> Title Generation</div>
-                <div class="checkbox-item"><input type="checkbox" value="w_sum" class="tax-check"> Abstract and Executive Summary Generation</div>
-                <div class="checkbox-item"><input type="checkbox" value="w_con" class="tax-check"> Formulation of conclusions</div>
-                <div class="checkbox-item"><input type="checkbox" value="w_ref" class="tax-check"> Citation formatting and bibliography management</div>
-                <div class="checkbox-item"><input type="checkbox" value="w_tone" class="tax-check"> Tone Adjustment</div>
-                <div class="checkbox-item"><input type="checkbox" value="w_tra" class="tax-check"> Translation</div>
-                <div class="checkbox-item"><input type="checkbox" value="w_prs" class="tax-check"> Press releases and outreach materials</div>
-            </div>
-        </div>
-
-        <div class="taxonomy-group">
-            <h3>Ethics Review</h3>
-            <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="e_bias" class="tax-check"> Bias analysis and discrimination assessment</div>
-                <div class="checkbox-item"><input type="checkbox" value="e_risk" class="tax-check"> Ethical risk analysis</div>
-                <div class="checkbox-item"><input type="checkbox" value="e_comp" class="tax-check"> Monitoring compliance with ethical standards</div>
-                <div class="checkbox-item"><input type="checkbox" value="e_conf" class="tax-check"> Data confidentiality monitoring</div>
-            </div>
-        </div>
-
-        <div class="taxonomy-group">
-            <h3>Quality Assurance</h3>
-            <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" value="sup_qa" class="tax-check"> Simulated Peer Review</div>
-                <div class="checkbox-item"><input type="checkbox" value="sup_trd" class="tax-check"> Consistency checking against field trends</div>
-                <div class="checkbox-item"><input type="checkbox" value="sup_lim" class="tax-check"> Identification of limitations</div>
-                <div class="checkbox-item"><input type="checkbox" value="sup_rec" class="tax-check"> Publication strategy and journal selection</div>
-                <div class="checkbox-item"><input type="checkbox" value="sup_pub" class="tax-check"> Publication support</div>
+            
+            <div>
+                <label>Comments & Details</label>
+                <div id="comments-container"></div>
+                <button type="button" class="btn-secondary" onclick="addCommentBox()" style="width:100%; text-align:center; border-style:dashed;">
+                    + Add Specific Comment
+                </button>
             </div>
         </div>
     </div>
 
-    <div class="form-section">
-        <h2>3. Customization</h2>
-        <div class="checkbox-grid">
+    <div class="card">
+        <h2>Configuration & Rendering</h2>
+        <div class="row">
             <div>
-                <label for="title-long">Custom Title (Long)</label>
-                <input type="text" id="title-long" placeholder="Default: Disclosure of Delegation...">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" id="opt-autobib" checked>
+                    <span>Auto-generate BibTeX file (<code>autobib</code>)</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" id="opt-nocite" checked>
+                    <span>Suppress footnote citation (<code>nocite</code>)</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" id="render-star">
+                    <span>No Title (<code>\AIDrenderDeclaration*</code>)</span>
+                </label>
+    
+                <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                    <label for="render-cols" style="margin-bottom: 0;">Layout Columns</label>
+                    <input type="number" id="render-cols" value="3" min="1" max="6" style="width: 80px;">
+                </div>
             </div>
-            <div>
-                <label for="title-short">Custom Title (Short)</label>
-                <input type="text" id="title-short" placeholder="For headers/TOC">
+            <div>                
+                <label for="title-full" style="margin-top:15px">Custom Section Title (Optional)</label>
+                <input type="text" id="title-full" placeholder="Default: Generative AI Disclosure">
+                
+                <div class="row" style="margin-top:10px; gap:10px;">
+                    <input type="text" id="title-short" placeholder="Short Title (TOC)">
+                    <input type="text" id="title-level" placeholder="\section, \chapter...">
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="checkbox-grid">
-            <div>
-                <label for="section-cmd">Section Command</label>
-                <select id="section-cmd">
-                    <option value="">Default (Auto-detect)</option>
-                    <option value="\chapter">Chapter</option>
-                    <option value="\section">Section</option>
-                    <option value="\subsection">Subsection</option>
-                    <option value="\section*">Section* (Unnumbered)</option>
-                </select>
+    <div class="card">
+        <h2>Taxonomy of Delegated Tasks</h2>
+        <p class="help-text" style="margin-bottom: 20px;">Select specific tasks delegated to Artificial Intelligence.</p>
+        
+        <div class="masonry-grid">
+            
+            <div class="taxonomy-card">
+                <h3>Conceptualization</h3>
+                <label class="tax-item"><input type="checkbox" value="c:idea" class="tax-check"> Idea generation</label>
+                <label class="tax-item"><input type="checkbox" value="c:obj" class="tax-check"> Defining objectives</label>
+                <label class="tax-item"><input type="checkbox" value="c:rq" class="tax-check"> Research questions</label>
+                <label class="tax-item"><input type="checkbox" value="c:feas" class="tax-check"> Feasibility assessment</label>
+                <label class="tax-item"><input type="checkbox" value="c:pre" class="tax-check"> Hypothesis viability</label>
+                <label class="tax-item"><input type="checkbox" value="c:sim" class="tax-check"> Simulated debate</label>
             </div>
-            <div>
-                <label for="columns">Number of Columns</label>
-                <input type="number" id="columns" value="3" min="1" max="4">
+
+            <div class="taxonomy-card">
+                <h3>Literature Review</h3>
+                <label class="tax-item"><input type="checkbox" value="l:srch" class="tax-check"> Search & Discovery</label>
+                <label class="tax-item"><input type="checkbox" value="l:sum" class="tax-check"> Summarization</label>
+                <label class="tax-item"><input type="checkbox" value="l:map" class="tax-check"> Concept Mapping</label>
+                <label class="tax-item"><input type="checkbox" value="l:pat" class="tax-check"> Patterns & Themes</label>
+                <label class="tax-item"><input type="checkbox" value="l:gaps" class="tax-check"> Identifying Gaps</label>
+                <label class="tax-item"><input type="checkbox" value="l:trans" class="tax-check"> Translation</label>
             </div>
-        </div>
-<div class="checkbox-grid">
-            <div>
-                <label for="checkmark">Checkmark Symbol</label>
-                <input type="text" id="checkmark" value="\checkmark" placeholder="e.g. \checkmark, \times">
+
+            <div class="taxonomy-card">
+                <h3>Methodology</h3>
+                <label class="tax-item"><input type="checkbox" value="m:des" class="tax-check"> Research Design</label>
+                <label class="tax-item"><input type="checkbox" value="m:proto" class="tax-check"> Prototyping</label>
+                <label class="tax-item"><input type="checkbox" value="m:meth" class="tax-check"> Validation</label>
             </div>
-            <div>
-                <label for="fontsize">Font Size</label>
-                <input type="text" id="fontsize" value="\smaller" placeholder="e.g. \smaller, \small, \footnotesize">
+
+            <div class="taxonomy-card">
+                <h3>Software & Automation</h3>
+                <label class="tax-item"><input type="checkbox" value="s:gen" class="tax-check"> Code Generation</label>
+                <label class="tax-item"><input type="checkbox" value="s:opt" class="tax-check"> Optimization</label>
+                <label class="tax-item"><input type="checkbox" value="s:debug" class="tax-check"> Debugging</label>
+                <label class="tax-item"><input type="checkbox" value="s:auto" class="tax-check"> Scripts</label>
+                <label class="tax-item"><input type="checkbox" value="s:algs" class="tax-check"> Algorithms</label>
+                <label class="tax-item"><input type="checkbox" value="s:doc" class="tax-check"> Documentation</label>
+            </div>
+
+            <div class="taxonomy-card">
+                <h3>Data Management</h3>
+                <label class="tax-item"><input type="checkbox" value="d:coll" class="tax-check"> Collection/Scraping</label>
+                <label class="tax-item"><input type="checkbox" value="d:val" class="tax-check"> Validation/Quality</label>
+                <label class="tax-item"><input type="checkbox" value="d:cln" class="tax-check"> Cleaning</label>
+                <label class="tax-item"><input type="checkbox" value="d:cur" class="tax-check"> Curation</label>
+                <label class="tax-item"><input type="checkbox" value="d:anl" class="tax-check"> Analysis</label>
+                <label class="tax-item"><input type="checkbox" value="d:viz" class="tax-check"> Visualization</label>
+                <label class="tax-item"><input type="checkbox" value="d:rep" class="tax-check"> Reporting Results</label>
+                <label class="tax-item"><input type="checkbox" value="d:lbl" class="tax-check"> Labeling</label>
+                <label class="tax-item"><input type="checkbox" value="d:syn" class="tax-check"> Synthetic Data</label>
+                <label class="tax-item"><input type="checkbox" value="d:anon" class="tax-check"> Anonymization</label>
+            </div>
+
+            <div class="taxonomy-card">
+                <h3>Visuals</h3>
+                <label class="tax-item"><input type="checkbox" value="v:gen" class="tax-check"> Image Generation</label>
+                <label class="tax-item"><input type="checkbox" value="v:edit" class="tax-check"> Editing</label>
+                <label class="tax-item"><input type="checkbox" value="v:chart" class="tax-check"> Charts/Diagrams</label>
+            </div>
+
+            <div class="taxonomy-card">
+                <h3>Writing & Editing</h3>
+                <label class="tax-item"><input type="checkbox" value="w:draft" class="tax-check"> Drafting</label>
+                <label class="tax-item"><input type="checkbox" value="w:poly" class="tax-check"> Polishing</label>
+                <label class="tax-item"><input type="checkbox" value="w:sum" class="tax-check"> Summarizing</label>
+                <label class="tax-item"><input type="checkbox" value="w:con" class="tax-check"> Connecting Ideas</label>
+                <label class="tax-item"><input type="checkbox" value="w:tone" class="tax-check"> Tone Adjustment</label>
+                <label class="tax-item"><input type="checkbox" value="w:tra" class="tax-check"> Translation</label>
+                <label class="tax-item"><input type="checkbox" value="w:ref" class="tax-check"> References</label>
+                <label class="tax-item"><input type="checkbox" value="w:prs" class="tax-check"> Proofreading</label>
+                <label class="tax-item"><input type="checkbox" value="w:title" class="tax-check"> Title Suggestions</label>
+            </div>
+
+            <div class="taxonomy-card">
+                <h3>Ethics</h3>
+                <label class="tax-item"><input type="checkbox" value="e:bias" class="tax-check"> Bias Mitigation</label>
+                <label class="tax-item"><input type="checkbox" value="e:risk" class="tax-check"> Risk Assessment</label>
+                <label class="tax-item"><input type="checkbox" value="e:comp" class="tax-check"> Compliance</label>
+                <label class="tax-item"><input type="checkbox" value="e:conf" class="tax-check"> Conflict of Interest</label>
+            </div>
+
+            <div class="taxonomy-card">
+                <h3>Critique & Feedback</h3>
+                <label class="tax-item"><input type="checkbox" value="sup:qa" class="tax-check"> Q&A / Querying</label>
+                <label class="tax-item"><input type="checkbox" value="sup:trd" class="tax-check"> Troubleshooting</label>
+                <label class="tax-item"><input type="checkbox" value="sup:lim" class="tax-check"> Identifying Limits</label>
+                <label class="tax-item"><input type="checkbox" value="sup:rec" class="tax-check"> Future Work Recs</label>
+                <label class="tax-item"><input type="checkbox" value="sup:pub" class="tax-check"> Response to Reviewers</label>
             </div>
         </div>
     </div>
 
     <div class="button-group">
-        <button class="btn-primary" onclick="generateLaTeX('full'); incrementGlobalCounter()">Generate Full LaTeX Document</button>
-        <button class="btn-secondary" onclick="generateLaTeX('snippet'); incrementGlobalCounter()">Generate Only Snippet</button>
+        <button type="button" class="btn-primary" onclick="generateLaTeX()">Generate Full Document</button>
+        <button type="button" class="btn-secondary" onclick="generateSnippet()">Generate Snippet Only</button>
     </div>
 
     <div id="output-area">
-        <h3>Generated Code</h3>
-        <pre id="code-result"></pre>
-        <button class="btn-secondary" onclick="copyToClipboard()" style="margin-top:10px; padding: 8px 16px; font-size: 0.9em;">Copy to Clipboard</button>
+        <div class="code-container">
+            <div class="code-header">
+                <span>LaTeX Source</span>
+                <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 0.8em;" onclick="copyToClipboard()">Copy Code</button>
+            </div>
+            <pre id="latex-code"></pre>
+        </div>
+    </div>
+    
+    <div class="footer-sponsor">
+        <div class="counter-badge">
+            <span id="counter-value">...</span> statements generated
+        </div>
+        <p>
+            Help keep this tool alive <br/>
+            <a href="https://www.paypal.com/donate/?hosted_button_id=8WA8FRVMB78W8" target="_blank" rel="noopener">
+              <img src="https://img.shields.io/badge/Donate-PayPal-blue.svg" alt="Donate" style="margin-top:10px;">
+            </a>
+        </p>
     </div>
 
-    <div class="sponsors">
-      <h2>Sponsors</h2>
+</div>
 
-      <a href="https://github.com/joaomlourenco/novathesis" target="_blank" rel="noopener">
-        <img src="resources/novathesis.png"
-             alt="NOVAthesis project logo"
-             style="max-height:50px; width:auto;">
-      </a>
-      <a href="https://tug.pt" target="_blank" rel="noopener">
-        <img src="resources/tug-pt.png"
-             alt="TUG-PT project logo"
-             style="max-height:50px; width:auto;">
-      </a>
-      <a href="mailto:joao.lourenco@fct.unl.pt">
-        Add your<br/>logo here!
-      </a>
-    </div>
-    <div style="font-size: 0.75em">
-        <h3></h3>
-        Copyright © 2025-26 <a href="https://docentes.fct.unl.pt/joao-lourenco">João M. Lourenço</a>.<br/>
-        Crafted with 🧡 for reproducible scientific writing.
-    </div>
-    <div id="counter-container" style="margin-top: 20px; font-family: monospace; color: #fff;">
-        Total Declarations Generated: <span id="counter-value">Loading...</span>
-    </div>
 <script>
-
-    // --- Dynamic comments ---
-    let commentCounter = 0;
-    let dragSrcEl = null;
-
-    function updateCommentPreviews() {
-        const boxes = Array.from(document.querySelectorAll(".comment-box"));
-        let num = 0;
-        boxes.forEach(box => {
-            const numbered = box.querySelector(".comment-numbered")?.checked;
-            const titleEl = box.querySelector(".comment-title");
-            if (!titleEl) return;
-            if (numbered) {
-                num += 1;
-                titleEl.textContent = `Comment #${num}`;
-            } else {
-                titleEl.textContent = "Comment (unnumbered)";
-            }
-        });
+    // --- Utils ---
+    function escapeLatex(str) {
+        if (!str) return "";
+        return str.replace(/([&%$#_{}])/g, "\\$1")
+                  .replace(/~/g, "\\textasciitilde{}")
+                  .replace(/\^/g, "\\textasciicircum{}");
     }
 
-    function requestDeleteComment(box) {
-        const textarea = box.querySelector(".comment-text");
-        const text = (textarea?.value ?? "").trim();
-
-        if (text.length > 0) {
-            const ok = window.confirm("This comment is not empty. Delete it?");
-            if (!ok) return;
-        }
-        box.remove();
-        updateCommentPreviews();
-    }
-
-    function handleDragStart(e) {
-        dragSrcEl = this;
-        this.classList.add("dragging");
-        e.dataTransfer.effectAllowed = "move";
-        // Required for Firefox to start drag
-        e.dataTransfer.setData("text/plain", this.dataset.id || "");
-    }
-
-    function handleDragEnd() {
-        this.classList.remove("dragging");
-        dragSrcEl = null;
-        updateCommentPreviews();
-    }
-
-    function handleDragOver(e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = "move";
-        return false;
-    }
-
-    function handleDrop(e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        if (!dragSrcEl || dragSrcEl === this) return false;
-
-        const container = document.getElementById("comments-container");
-        if (!container) return false;
-
-        const boxes = Array.from(container.querySelectorAll(".comment-box"));
-        const srcIndex = boxes.indexOf(dragSrcEl);
-        const tgtIndex = boxes.indexOf(this);
-
-        if (srcIndex < 0 || tgtIndex < 0) return false;
-
-        if (srcIndex < tgtIndex) {
-            container.insertBefore(dragSrcEl, this.nextSibling);
-        } else {
-            container.insertBefore(dragSrcEl, this);
-        }
-
-        updateCommentPreviews();
-        return false;
-    }
-
-    function wireCommentBox(box) {
-        const checkbox = box.querySelector(".comment-numbered");
-        const textarea = box.querySelector(".comment-text");
-        const delBtn = box.querySelector(".comment-delete");
-
-        checkbox?.addEventListener("change", updateCommentPreviews);
-        textarea?.addEventListener("input", () => {
-            // no-op for now, but kept for future validation hooks
-        });
-        delBtn?.addEventListener("click", () => requestDeleteComment(box));
-
-        box.addEventListener("dragstart", handleDragStart);
-        box.addEventListener("dragend", handleDragEnd);
-        box.addEventListener("dragover", handleDragOver);
-        box.addEventListener("drop", handleDrop);
-    }
-
+    // --- Comment Box Logic ---
+    let commentCount = 0;
     function addCommentBox() {
-        commentCounter++;
-
-        const container = document.getElementById("comments-container");
-        if (!container) return;
-
-        const div = document.createElement("div");
-        div.className = "comment-box";
-        div.dataset.id = String(commentCounter);
-        div.draggable = true;
-
+        commentCount++;
+        const container = document.getElementById('comments-container');
+        const div = document.createElement('div');
+        div.className = 'comment-box';
+        div.id = `comment-box-${commentCount}`;
         div.innerHTML = `
             <div class="comment-header">
-                <div class="comment-title">Comment</div>
-                <div class="comment-actions">
-                    <span class="drag-handle" title="Drag to reorder">Drag</span>
-                    <div class="checkbox-item" style="margin:0;">
-                        <input type="checkbox" class="comment-numbered" checked>
-                        <label style="display:inline; font-weight:normal;">Number this comment?</label>
-                    </div>
-                    <button type="button" class="btn-secondary comment-delete" style="padding: 8px 12px; font-size: 0.9em;">
-                        Delete
-                    </button>
+                <span class="comment-title">Comment #${commentCount}</span>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="comment-star-${commentCount}">
+                    <span style="font-size:0.85rem">Unnumbered</span>
                 </div>
             </div>
-
-            <textarea rows="3"
-                placeholder="Explain how AI was used..."
-                class="comment-text"></textarea>
+            <textarea id="comment-text-${commentCount}" placeholder="Describe how AI was used..." rows="2"></textarea>
+            <div style="text-align:right; margin-top:10px;">
+                <button type="button" class="btn-danger" onclick="removeCommentBox(${commentCount})">Remove</button>
+            </div>
         `;
-
         container.appendChild(div);
-        wireCommentBox(div);
-        updateCommentPreviews();
+    }
+    function removeCommentBox(id) {
+        const box = document.getElementById(`comment-box-${id}`);
+        if(box) box.remove();
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        // Start with one comment box by default
-        addCommentBox();
-    });
-    // --- End dynamic comments ---
-
-function getFormValues() {
-        return {
-            authors: document.getElementById('authors').value,
-            tools: document.getElementById('tools').value,
-            comments: Array.from(document.querySelectorAll('.comment-box')).map(box => ({
-                text: box.querySelector('.comment-text').value,
-                numbered: box.querySelector('.comment-numbered').checked
-            })),
-            titleLong: document.getElementById('title-long').value,
-            titleShort: document.getElementById('title-short').value,
-            sectionCmd: document.getElementById('section-cmd').value,            columns: document.getElementById('columns').value || 3,
-            checkmark: document.getElementById('checkmark').value,
-            fontsize: document.getElementById('fontsize').value,
-            selectedKeys: Array.from(document.querySelectorAll('.tax-check:checked')).map(cb => cb.value)
-        };
-    }
-
-    function generateSnippet(data, commentRender = false) {
-        let code = `% --- GAIDeT Disclosure Configuration ---\n`;
+    // --- LaTeX Generation Logic ---
+    function getFormData() {
+        const authors = escapeLatex(document.getElementById('authors').value.trim());
+        const tools = escapeLatex(document.getElementById('tools').value.trim());
         
-        // 1. Customization (if non-default)
-        if (data.checkmark && data.checkmark !== '\\checkmark') {
-            code += `\\GAIsetCheckmarkSymbol{${data.checkmark}}\n`;
-        }
-        if (data.fontsize && data.fontsize !== '\\smaller') {
-            code += `\\GAIsetChecklistFontSize{${data.fontsize}}\n`;
-        }
+        // Options
+        const autobib = document.getElementById('opt-autobib').checked;
+        const nocite = document.getElementById('opt-nocite').checked;
         
-        // Title customization
-        if (data.titleLong || data.titleShort || data.sectionCmd) {
-            let cmd = `\\GAIdiscloseTitle`;
-            if (data.titleShort) cmd += `[${data.titleShort}]`;
-            cmd += `{${data.titleLong || ''}}`;
-            if (data.sectionCmd) cmd += `[${data.sectionCmd}]`;
-            code += `${cmd}\n`;
-        }
+        // Title Config
+        const titleFull = escapeLatex(document.getElementById('title-full').value.trim());
+        const titleShort = escapeLatex(document.getElementById('title-short').value.trim());
+        const titleLevel = document.getElementById('title-level').value.trim();
+        
+        // Rendering
+        const columns = document.getElementById('render-cols').value || 3;
+        const renderStar = document.getElementById('render-star').checked;
 
-        code += `\n`;
-
-        // 2. Tools
-        code += `\\GAItoolsUsed{${data.tools}}\n\n`;
-
-        // 3. Taxonomy Activations
-        if (data.selectedKeys.length > 0) {
-            code += `% Delegated Tasks\n`;
-            data.selectedKeys.forEach(key => {
-                code += `\\GAIactivate{${key}}\n`;
-            });
-            code += `\n`;
-        } else {
-            code += `% No specific tasks selected.\n\n`;
-        }
-
-        // 4. Comments
-        // 4. Comments
-        data.comments.forEach(comment => {
-            if (!comment.text.trim()) return;
-
-            const env = comment.numbered ? 'GAIcomment' : 'GAIcomment*';
-            code += `\\begin{${env}}
-`;
-            code += `  ${comment.text}
-`;
-            code += `\\end{${env}}
-
-`;
+        // Comments
+        const comments = [];
+        const commentBoxes = document.querySelectorAll('.comment-box');
+        commentBoxes.forEach(box => {
+            const textarea = box.querySelector('textarea');
+            const checkbox = box.querySelector('input[type="checkbox"]');
+            if (textarea.value.trim()) {
+                comments.push({
+                    text: escapeLatex(textarea.value.trim()),
+                    starred: checkbox.checked
+                });
+            }
         });
 
+        // Taxonomy
+        const taxonomy = [];
+        document.querySelectorAll('.tax-check:checked').forEach(cb => taxonomy.push(cb.value));
 
+        return { authors, tools, comments, autobib, nocite, titleFull, titleShort, titleLevel, columns, renderStar, taxonomy };
+    }
 
-        // 5. Render Command
-        code += `% --- Render Declaration ---\n`;
-        if (commentRender) {
-            code += `% \\GAIrenderDeclaration[${data.columns}]{${data.authors}}\n`;
-        } else {
-            code += `\\GAIrenderDeclaration[${data.columns}]{${data.authors}}\n`;
+    function validate(data) {
+        if (!data.authors) {
+            alert("Please enter the Author names.");
+            document.getElementById('authors').focus();
+            return false;
         }
+        return true;
+    }
+
+    function buildPreamble(data) {
+        let opts = [];
+        if(!data.autobib) opts.push("autobib=false");
+        if(!data.nocite) opts.push("nocite=false");
+        let optStr = opts.length ? `[${opts.join(',')}]` : '';
+        return `\\usepackage${optStr}{aidisclose}`;
+    }
+
+    function buildConfiguration(data) {
+        let code = "";
+        
+        // Title
+        if(data.titleFull || data.titleLevel) {
+            let cmd = "\\AIDdiscloseTitle";
+            if(data.titleShort) cmd += `[${data.titleShort}]`;
+            cmd += `{${data.titleFull || "Generative AI Disclosure"}}`;
+            if(data.titleLevel) cmd += `[${data.titleLevel}]`;
+            code += `${cmd}\n\n`;
+        }
+
+        // Taxonomy
+        if(data.taxonomy.length > 0) {
+            code += `% Taxonomy Activation\n`;
+            data.taxonomy.forEach(key => {
+                code += `\\AIDactivate{${key}}\n`;
+            });
+            code += `\n`;
+        }
+        
+        // Tools
+        if(data.tools) {
+            code += `\\AIDtoolsUsed{${data.tools}}\n\n`;
+        } else {
+            code += `\\AIDtoolsUsed{}\n\n`;
+        }
+        
+        // Comments
+        data.comments.forEach(c => {
+            const env = c.starred ? "AIDcomment*" : "AIDcomment";
+            code += `\\begin{${env}}\n${c.text}\n\\end{${env}}\n\n`;
+        });
+
         return code;
     }
 
-    function generateLaTeX(type) {
-        const data = getFormValues();
+    function buildRender(data) {
+        const cmd = data.renderStar ? "\\AIDrenderDeclaration*" : "\\AIDrenderDeclaration";
+        const colStr = (data.columns && data.columns != 3) ? `[${data.columns}]` : ""; 
+        return `${cmd}${colStr}{${data.authors}}`;
+    }
 
-        if (!data.authors && type === 'full') {
-            alert('Please enter Author names.');
-            return;
-        }
+    function generateLaTeX() {
+        const data = getFormData();
+        if (!validate(data)) return;
+        incrementGlobalCounter();
 
-        const snippet = generateSnippet(data, type === 'snippet');
-        let result = "";
+        let code = `\\documentclass{article}\n`;
+        code += buildPreamble(data) + `\n\n`;
+        code += `\\title{Generative AI Disclosure}\n`;
+        code += `\\author{${data.authors}}\n`;
+        code += `\\date{\\today}\n\n`;
+        code += `\\begin{document}\n\n`;
+        code += `\\maketitle\n\n`;
+        code += `% --- aidisclose configuration ---\n`;
+        code += buildConfiguration(data);
+        code += `% --- aidisclose rendering ---\n`;
+        code += buildRender(data);
+        code += `\n\n\\end{document}`;
 
-        if (type === 'snippet') {
-            result = snippet;
-        } else {
-            result = `% Generated via GAIDeT Generator for LaTeX
-% -----------------------------------------------------------
-% This file depends on the LaTeX package 'aidisclose'.
-% If not already installed by your LaTeX distribution,
-% it can be download from:
-% - GitHub: https://github.com/joaomlourenco?tab=repositories
-% -   CTAN: https://ctan.org/pkg/aidisclose
-% -----------------------------------------------------------
+        displayOutput(code);
+    }
 
-\\documentclass[11pt]{article}
+    function generateSnippet() {
+        const data = getFormData();
+        if (!validate(data)) return;
+        incrementGlobalCounter();
 
-% Required Packages for this document
-\\usepackage[T1]{fontenc}
-\\usepackage{xcolor}
-\\usepackage{url}
-\\usepackage{hyperref}
+        let code = `% Add to Preamble:\n`;
+        code += buildPreamble(data) + `\n\n`;
+        code += `% Configuration:\n`;
+        code += buildConfiguration(data);
+        code += `% Rendering:\n`;
+        code += buildRender(data);
 
-% Bibliography Setup (aidisclose uses biblatex or standard bibtex)
-\\usepackage{biblatex}
-\\addbibresource{aidisclose.bib} % aidisclose generates this file automatically
+        displayOutput(code);
+    }
 
-% Load aidisclose package
-% Set options to [autobib=false,nocite=true] to remove citations in the GenAI disclosure statement
-\\usepackage[autobib=true,nocite=false]{aidisclose}
-
-\\title{My Research Paper}
-\\author{${data.authors}}
-\\date{\\today}
-
-\\begin{document}
-
-\\maketitle
-
-\\section{Introduction}
-This is a sample document demonstrating the GAIDeT disclosure.
-
-${snippet}
-
-\\printbibliography
-
-\\end{document}`;
-        }
-
-        const outputArea = document.getElementById('output-area');
-        const codeBlock = document.getElementById('code-result');
-        outputArea.style.display = 'block';
-        codeBlock.textContent = result;
-        
-        // Scroll to output
-        outputArea.scrollIntoView({ behavior: 'smooth' });
+    function displayOutput(code) {
+        document.getElementById('latex-code').textContent = code;
+        const area = document.getElementById('output-area');
+        area.style.display = 'block';
+        area.scrollIntoView({behavior: "smooth"});
     }
 
     function copyToClipboard() {
-        const code = document.getElementById('code-result').textContent;
+        const code = document.getElementById('latex-code').textContent;
         navigator.clipboard.writeText(code).then(() => {
-            alert('Code copied to clipboard!');
+            const btn = document.querySelector('#output-area button');
+            const originalText = btn.innerText;
+            btn.innerText = "Copied!";
+            setTimeout(() => btn.innerText = originalText, 2000);
         });
     }
 
-// -------------------------------------------
-// counter stuff
-// -------------------------------------------
-
-    // --- Dynamic comments (Keep your existing comment logic here) ---
-    // [ ... Paste your existing comment logic here if it's not already separate ... ]
-    // (If you kept the previous script structure, just replace the counter part below)
-    
-    // ==========================================
-    //       NEW COUNTER LOGIC (CounterAPI)
-    // ==========================================
-
-    // 1. Define your unique storage location
-    // We sanitize the hostname to remove special characters for the API
-    const rawNamespace = window.location.hostname || 'local-test'; 
-    const namespace = rawNamespace.replace(/[^a-zA-Z0-9]/g, '_'); 
-    const key = 'gaidet_button_clicks'; // underscores are safer for this API
-
-    // 2. Function to update the number on screen
+    // --- Counter API ---
+    const namespace = 'aidisclose_v1';
+    const key = 'gaidet_button_clicks';
     function updateCounterUI(value) {
-        const counterElement = document.getElementById('counter-value');
-        if(counterElement) counterElement.innerText = value;
+        const el = document.getElementById('counter-value');
+        if(el) el.innerText = value;
     }
-
-    // 3. Fetch the current count immediately (Read-Only)
-    // usage: /v1/{namespace}/{key}/
     fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/`)
-        .then(response => {
-            if (response.ok) return response.json();
-            throw new Error('Counter not found or error');
-        })
-        .then(data => updateCounterUI(data.count)) // Note: this API uses .count, not .value
-        .catch(err => {
-            console.warn('Counter read failed:', err);
-            updateCounterUI(0);
-        });
+        .then(r => r.ok ? r.json() : {count:0})
+        .then(d => updateCounterUI(d.count))
+        .catch(e => updateCounterUI(0));
 
-    // 4. Function to increment the counter (Write)
-    // usage: /v1/{namespace}/{key}/up
     function incrementGlobalCounter() {
         fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
-            .then(response => {
-                if (response.ok) return response.json();
-                throw new Error('Increment failed');
-            })
-            .then(data => updateCounterUI(data.count))
-            .catch(error => console.error('Error updating counter:', error));
+            .then(r => r.ok ? r.json() : {})
+            .then(d => updateCounterUI(d.count))
+            .catch(e => console.error(e));
     }
-    
-    // Note: Your buttons already have onclick="incrementGlobalCounter()", 
-    // so no extra event listeners are needed.
-    
 </script>
-    
+
 </body>
 </html>
