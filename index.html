@@ -313,6 +313,7 @@
             font-weight: 500;
             display: inline-block;
             margin-bottom: 15px;
+            transition: background-color 0.3s, color 0.3s;
         }
     </style>
 </head>
@@ -323,7 +324,7 @@
     <header>
         <h1>Generative AI Disclosure Generator</h1>
         <p class="subtitle">
-            Generate compliant LaTeX code for the <code>aidisclose</code> package.
+            Generate compliant LaTeX code for the <code>aidisclose</code> package (v1.11.0).
         </p>
     </header>
 
@@ -368,19 +369,46 @@
                     <span>No Title (<code>\AIDrenderDeclaration*</code>)</span>
                 </label>
     
-                <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                    <label for="render-cols" style="margin-bottom: 0;">Layout Columns</label>
-                    <input type="number" id="render-cols" value="3" min="1" max="6" style="width: 80px;">
+                <div style="display: flex; gap: 15px; margin-top: 15px;">
+                    <div>
+                        <label for="render-cols">Columns</label>
+                        <input type="number" id="render-cols" value="3" min="1" max="6" style="width: 80px;">
+                    </div>
+                    <!-- <div style="flex: 1;"> -->
+                    <div style="width: 180px;">
+                        <label for="render-lang">Language</label>
+                        <select id="render-lang">
+                            <option value="default" selected>Default</option>
+                            <option value="en">English (en)</option>
+                            <option value="pt">Portuguese (pt)</option>
+                            <option value="cat">Catalan (cat)</option>
+                            <option value="cz">Czech (cz)</option>
+                            <option value="da">Danish (da)</option>
+                            <option value="nl">Dutch (nl)</option>
+                            <option value="fr">French (fr)</option>
+                            <option value="de">German (de)</option>
+                            <option value="gr">Greek (gr)</option>
+                            <option value="it">Italian (it)</option>
+                            <option value="pl">Polish (pl)</option>
+                            <option value="sk">Slovak (sk)</option>
+                            <option value="es">Spanish (es)</option>
+                            <option value="uk">Ukrainian (uk)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
+
             <div>                
-                <label for="title-full" style="margin-top:15px">Custom Section Title (Optional)</label>
+                <label for="title-full" style="margin-top:0px">Custom Section Title (Optional)</label>
                 <input type="text" id="title-full" placeholder="Default: Generative AI Disclosure">
                 
                 <div class="row" style="margin-top:10px; gap:10px;">
                     <input type="text" id="title-short" placeholder="Short Title (TOC)">
                     <input type="text" id="title-level" placeholder="\section, \chapter...">
                 </div>
+
+                <label for="render-label" style="margin-top: 15px;">LaTeX Label</label>
+                <input type="text" id="render-label" placeholder="e.g. sec:aid_declaration">
             </div>
         </div>
     </div>
@@ -440,6 +468,7 @@
                 <label class="tax-item"><input type="checkbox" value="d:lbl" class="tax-check"> Labeling</label>
                 <label class="tax-item"><input type="checkbox" value="d:syn" class="tax-check"> Synthetic Data</label>
                 <label class="tax-item"><input type="checkbox" value="d:anon" class="tax-check"> Anonymization</label>
+                <label class="tax-item"><input type="checkbox" value="d:trans" class="tax-check"> Translation</label>
             </div>
 
             <div class="taxonomy-card">
@@ -497,7 +526,7 @@
     </div>
     
     <div class="footer-sponsor">
-        <div class="counter-badge">
+        <div class="counter-badge" title="Statements generated">
             <span id="counter-value">...</span> statements generated
         </div>
         <p>
@@ -564,6 +593,8 @@
         // Rendering
         const columns = document.getElementById('render-cols').value || 3;
         const renderStar = document.getElementById('render-star').checked;
+        const renderLang = document.getElementById('render-lang').value;
+        const renderLabel = escapeLatex(document.getElementById('render-label').value.trim());
 
         // Comments
         const comments = [];
@@ -583,7 +614,7 @@
         const taxonomy = [];
         document.querySelectorAll('.tax-check:checked').forEach(cb => taxonomy.push(cb.value));
 
-        return { authors, tools, comments, autobib, nocite, titleFull, titleShort, titleLevel, columns, renderStar, taxonomy };
+        return { authors, tools, comments, autobib, nocite, titleFull, titleShort, titleLevel, columns, renderStar, taxonomy, renderLang, renderLabel };
     }
 
     function validate(data) {
@@ -642,8 +673,20 @@
 
     function buildRender(data) {
         const cmd = data.renderStar ? "\\AIDrenderDeclaration*" : "\\AIDrenderDeclaration";
-        const colStr = (data.columns && data.columns != 3) ? `[${data.columns}]` : ""; 
-        return `${cmd}${colStr}{${data.authors}}`;
+        
+        // Build options list for new key-value syntax
+        let opts = [];
+        if (data.columns && data.columns != 3) opts.push(`ncols=${data.columns}`);
+        
+        // Only add lang if it is NOT default
+        if (data.renderLang && data.renderLang !== 'default') {
+            opts.push(`lang=${data.renderLang}`);
+        }
+        
+        if (data.renderLabel) opts.push(`label=${data.renderLabel}`);
+
+        const optStr = opts.length > 0 ? `[${opts.join(',')}]` : ""; 
+        return `${cmd}${optStr}{${data.authors}}`;
     }
 
     function generateLaTeX() {
@@ -702,10 +745,29 @@
     // --- Counter API ---
     const namespace = 'aidisclose_v1';
     const key = 'gaidet_button_clicks';
+    
     function updateCounterUI(value) {
         const el = document.getElementById('counter-value');
-        if(el) el.innerText = value;
+        const badge = document.querySelector('.counter-badge');
+        
+        if(el) {
+            el.innerText = value;
+            // Add a helpful tooltip
+            badge.title = `${value} statements generated`;
+
+            // Logic to hide (match background) or show
+            if (value == 0 || value === '...') {
+                // Invisible to the eye, but selectable
+                badge.style.backgroundColor = 'var(--background)'; 
+                badge.style.color = 'var(--background)';
+            } else {
+                // Visible
+                badge.style.backgroundColor = '#e2e8f0';
+                badge.style.color = 'var(--text-secondary)';
+            }
+        }
     }
+    
     fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/`)
         .then(r => r.ok ? r.json() : {count:0})
         .then(d => updateCounterUI(d.count))
