@@ -878,9 +878,11 @@
     }
 
     // --- Counter API ---
-    const namespace = 'aidisclose_v1';
-    const key = 'gaidet_button_clicks';
-    
+    // Self-hosted Cloudflare Worker (see DEPLOY-counter.md). GET returns the
+    // current total; POST increments it and returns the new total.
+    // Replace with your deployed Worker URL:
+    const COUNTER_URL = 'https://aidisclose-counter.joao-m-lourenco.workers.dev';
+
     function updateCounterUI(value) {
         const el = document.getElementById('counter-value');
         const badge = document.querySelector('.counter-badge');
@@ -903,16 +905,17 @@
         }
     }
     
-    fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/`)
-        .then(r => r.ok ? r.json() : {count:0})
+    // Show the current global total on load (read-only GET).
+    fetch(COUNTER_URL)
+        .then(r => r.ok ? r.json() : { count: 0 })
         .then(d => updateCounterUI(d.count))
-        .catch(e => updateCounterUI(0));
+        .catch(() => updateCounterUI(0));
 
     function incrementGlobalCounter() {
-        fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
+        fetch(COUNTER_URL, { method: 'POST' })
             .then(r => r.ok ? r.json() : {})
-            .then(d => updateCounterUI(d.count))
-            .catch(e => console.error(e));
+            .then(d => { if (typeof d.count === 'number') updateCounterUI(d.count); })
+            .catch(e => console.error('counter:', e));
     }
 </script>
 

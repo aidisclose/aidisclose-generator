@@ -1,0 +1,10 @@
+name = "aidisclose-counter"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+
+# KV namespace binding used by worker.js as env.AID_COUNTER.
+# Replace `id` with the id printed by:
+#   npx wrangler kv namespace create AID_COUNTER
+[[kv_namespaces]]
+binding = "AID_COUNTER"
+id = "5f223e336aa744cbbe44a593dfd8eb5e"
