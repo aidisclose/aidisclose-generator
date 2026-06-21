@@ -34,6 +34,18 @@ npx wrangler deploy
 `wrangler deploy` prints the Worker URL, e.g.
 `https://aidisclose-counter.<your-subdomain>.workers.dev`.
 
+### First-party custom domain (important for Firefox)
+
+`wrangler.toml` declares a custom domain `counter.aidisclose.org`. On
+`wrangler deploy`, Cloudflare provisions the DNS record and TLS certificate
+automatically (the zone is on the same account). The page calls this
+first-party hostname instead of `*.workers.dev` — the latter is blocked by
+Firefox Enhanced Tracking Protection as a third-party tracker, which made the
+counter read as 0 in Firefox.
+
+`COUNTER_URL` in `../index.html` is therefore set to
+`https://counter.aidisclose.org`.
+
 ## Wire up the page
 
 1. In `../index.html`, set `COUNTER_URL` to your deployed Worker URL (keep the

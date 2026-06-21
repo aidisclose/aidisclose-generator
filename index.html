@@ -594,7 +594,10 @@
     // --- Counter API ---
     // Self-hosted Cloudflare Worker (see DEPLOY-counter.md). GET returns the
     // current total; POST increments it and returns the new total.
-    const COUNTER_URL = 'https://aidisclose-counter.joao-m-lourenco.workers.dev';
+    // First-party subdomain (see counter/wrangler.toml). Using the site's own
+    // domain avoids Firefox Enhanced Tracking Protection blocking the request,
+    // which happens with the third-party *.workers.dev hostname.
+    const COUNTER_URL = 'https://counter.aidisclose.org';
 
     function updateCounterUI(value) {
         const el = document.getElementById('counter-value');
