@@ -61,7 +61,7 @@ h1 {
 /* --- Cards & sections --- */
 .card {
   background: var(--panel); border: 1px solid var(--panel-border);
-  border-radius: var(--radius); padding: 30px; margin-bottom: 25px;
+  border-radius: var(--radius); padding: 34px 36px; margin-bottom: 32px;
   backdrop-filter: var(--backdrop); box-shadow: var(--panel-shadow);
 }
 h2 {
@@ -72,8 +72,8 @@ h2 {
 h2::before { content: ''; width: 4px; height: 20px; border-radius: 2px; background: var(--accent-grad); }
 
 /* --- Forms --- */
-.form-grid { display: grid; gap: 20px; }
-.row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-grid { display: grid; gap: 24px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 @media (max-width: 600px) { .row { grid-template-columns: 1fr; } }
 
 label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--text); font-size: .95rem; }
@@ -95,10 +95,10 @@ input:focus, textarea:focus, select:focus {
 .checkbox-wrapper span { font-size: .95rem; color: var(--text); }
 
 /* --- Taxonomy grid --- */
-.masonry-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.masonry-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; }
 .taxonomy-card {
   background: var(--subpanel); border: 1px solid var(--subpanel-border);
-  border-radius: var(--radius-sm); padding: 16px;
+  border-radius: var(--radius-sm); padding: 18px 20px;
 }
 .taxonomy-card h3 {
   margin: 0 0 12px; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em;
