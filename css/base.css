@@ -151,3 +151,9 @@ pre { margin: 0; padding: 20px; color: var(--code-ink); overflow-x: auto; font-f
 .counter-badge { background: var(--accent-soft); color: var(--accent-ink); padding: 5px 14px; border-radius: 999px; font-size: .8rem; font-weight: 600; display: inline-block; margin-bottom: 15px; transition: opacity .3s; }
 .counter-badge.counter-hidden { opacity: 0; }
 .footer-sponsor a { color: var(--accent-ink); }
+.donate-btn {
+  display: inline-block; margin-top: 10px; padding: 10px 20px; border-radius: var(--radius-sm);
+  background: var(--accent-soft); color: var(--accent-ink); border: 1px solid var(--panel-border);
+  font-weight: 600; font-size: .9rem; text-decoration: none; transition: filter .2s, transform .15s;
+}
+.donate-btn:hover { transform: translateY(-1px); filter: brightness(.97); }
