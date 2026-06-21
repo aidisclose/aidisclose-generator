@@ -1,12 +1,12 @@
 /* Theme: Clean & minimal — flat surfaces, hairline borders, tonal buttons. */
 
 [data-theme="minimal"][data-mode="light"] {
-  --bg: #ffffff;
-  --toolbar-bg: rgba(255,255,255,.9);
-  --panel: #ffffff; --panel-border: #e6e6e6;
-  --subpanel: #f8fafc; --subpanel-border: #ececec;
+  --bg: #f4f6f9;
+  --toolbar-bg: rgba(244,246,249,.9);
+  --panel: #ffffff; --panel-border: #cfd6df;
+  --subpanel: #f6f8fb; --subpanel-border: #dde3ea;
   --radius: 10px; --radius-sm: 8px;
-  --panel-shadow: none; --backdrop: none;
+  --panel-shadow: 0 1px 3px rgba(16,24,40,.06), 0 1px 2px rgba(16,24,40,.05); --backdrop: none;
   --text: #1a1a1a; --heading: #000; --muted: #6b6b6b;
   --accent: #2563eb; --accent-grad: #2563eb;
   --accent-soft: #eef3fe; --accent-ink: #1d4ed8; --accent-ring: rgba(37,99,235,.15);
@@ -20,10 +20,10 @@
 }
 
 [data-theme="minimal"][data-mode="dark"] {
-  --bg: #111111;
-  --toolbar-bg: rgba(17,17,17,.9);
-  --panel: #181818; --panel-border: #2a2a2a;
-  --subpanel: #1d1d1d; --subpanel-border: #2a2a2a;
+  --bg: #0e0e0e;
+  --toolbar-bg: rgba(14,14,14,.9);
+  --panel: #1a1a1a; --panel-border: #383c42;
+  --subpanel: #202020; --subpanel-border: #34383e;
   --radius: 10px; --radius-sm: 8px;
   --panel-shadow: none; --backdrop: none;
   --text: #e6e6e6; --heading: #fff; --muted: #9a9a9a;
