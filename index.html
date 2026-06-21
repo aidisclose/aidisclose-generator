@@ -1,361 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="minimal" data-mode="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIDisclose Statement Generator</title>
+    <script>
+        // Decide light/dark before first paint (avoids a flash of the wrong mode):
+        //   stored preference  >  OS preference  >  local time (dark ~after sunset..sunrise)
+        (function() {
+            var root = document.documentElement;
+            root.setAttribute('data-theme', 'minimal');
+            function preferred() {
+                try { var s = localStorage.getItem('aid_mode'); if (s) return s; } catch (e) {}
+                if (window.matchMedia) {
+                    if (matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+                    if (matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+                }
+                var h = new Date().getHours();
+                return (h >= 19 || h < 7) ? 'dark' : 'light';
+            }
+            root.setAttribute('data-mode', preferred());
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            /* Professional Palette */
-            --primary: #2563eb;       /* Royal Blue */
-            --primary-hover: #1d4ed8;
-            --novathesis-button: #638852;
-            --novathesis-hover: #739862;
-            --surface: #ffffff;
-            --background: #f1f5f9;    /* Slate 100 */
-            --text-main: #0f172a;     /* Slate 900 */
-            --text-secondary: #475569; /* Slate 600 */
-            --border: #e2e8f0;        /* Slate 200 */
-            --border-focus: #3b82f6;
-            --success: #10b981;
-            --danger: #ef4444;
-            --radius: 8px;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: var(--background);
-            color: var(--text-main);
-            line-height: 1.5;
-            margin: 0;
-            padding: 40px 20px;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        /* --- Header --- */
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        h1 {
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 10px;
-            letter-spacing: -0.025em;
-        }
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .subtitle code {
-            background: #e0e7ff;
-            color: var(--primary);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-
-        /* --- Cards & Sections --- */
-        .card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
-            padding: 30px;
-            margin-bottom: 25px;
-            border: 1px solid var(--border);
-        }
-
-        h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-top: 0;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        h2::before {
-            content: '';
-            display: block;
-            width: 4px;
-            height: 20px;
-            background: var(--primary);
-            border-radius: 2px;
-        }
-
-        /* --- Forms --- */
-        .form-grid {
-            display: grid;
-            gap: 20px;
-        }
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        @media (max-width: 600px) { .row { grid-template-columns: 1fr; } }
-
-        label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 6px;
-            color: var(--text-main);
-            font-size: 0.95rem;
-        }
-        .help-text {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            display: block;
-        }
-
-        input[type="text"], input[type="number"], textarea, select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            font-size: 1rem;
-            color: var(--text-main);
-            font-family: inherit;
-            transition: border-color 0.15s, box-shadow 0.15s;
-            box-sizing: border-box;
-        }
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--border-focus);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        /* --- Custom Checkboxes --- */
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 0;
-            cursor: pointer;
-        }
-        .checkbox-wrapper input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary);
-            cursor: pointer;
-        }
-        .checkbox-wrapper span {
-            font-size: 0.95rem;
-            color: var(--text-main);
-        }
-
-        /* --- Taxonomy Grid Layout --- */
-        .masonry-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        .taxonomy-card {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 15px;
-        }
-        .taxonomy-card h3 {
-            margin: 0 0 12px 0;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            font-weight: 700;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 8px;
-        }
-        .tax-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        .tax-item:hover {
-            color: var(--primary);
-        }
-        .tax-item input {
-            margin-top: 4px;
-            margin-right: 8px;
-            accent-color: var(--primary);
-        }
-
-        /* --- Dynamic Comments --- */
-        .comment-box {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--primary);
-            padding: 15px;
-            border-radius: var(--radius);
-            margin-bottom: 15px;
-            animation: fadeIn 0.3s ease;
-        }
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .comment-title {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- Buttons --- */
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            align-items: stretch;
-        }
-        .btn-cell {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .btn-cell > button {
-            width: 100%;
-            box-sizing: border-box;
-            height: 60px;
-            padding: 8px 16px;
-            line-height: 1.2;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn-caption {
-            margin-top: 6px;
-            font-size: 0.78em;
-            line-height: 1.3;
-            color: #6b7280;
-            text-align: center;
-        }
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: var(--radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 1rem;
-        }
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
-        }
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
-        }
-        .btn-secondary {
-            background-color: white;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-        }
-        .btn-secondary:hover {
-            background-color: #f8fafc;
-            color: var(--text-main);
-            border-color: #cbd5e1;
-        }
-        .btn-novathesis {
-            background-color: var(--novathesis-button);
-            color: white;
-            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
-        }
-        .btn-novathesis:hover {
-            background-color: var(--novathesis-hover);
-            transform: translateY(-1px);
-        }
-        .btn-danger {
-            background-color: #fee2e2;
-            color: var(--danger);
-            padding: 6px 12px;
-            font-size: 0.8rem;
-        }
-        .btn-danger:hover { background-color: #fecaca; }
-
-        /* --- Output Area --- */
-        #output-area {
-            display: none;
-            margin-top: 40px;
-            scroll-margin-top: 20px;
-        }
-        .code-container {
-            background: #1e1e1e; /* Dark theme */
-            border-radius: var(--radius);
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-        }
-        .code-header {
-            background: #2d2d2d;
-            padding: 8px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #ccc;
-            font-size: 0.85rem;
-            border-bottom: 1px solid #444;
-        }
-        pre {
-            margin: 0;
-            padding: 20px;
-            color: #d4d4d4;
-            overflow-x: auto;
-            font-family: 'Consolas', 'Monaco', monospace;
-            white-space: pre-wrap;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-        
-        /* --- Footer/Sponsors --- */
-        .footer-sponsor {
-            margin-top: 50px;
-            text-align: center;
-            border-top: 1px solid var(--border);
-            padding-top: 30px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-        .counter-badge {
-            background: #e2e8f0;
-            color: var(--text-secondary);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            display: inline-block;
-            margin-bottom: 15px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-    </style>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/theme-minimal.css">
 </head>
 <body>
 
 <div class="container">
-    
+
+    <div class="toolbar">
+        <span class="brand">AI<span>disclose</span></span>
+        <span class="spacer"></span>
+        <span class="mode-toggle" onclick="toggleMode()"><span id="mode-icon">🌙</span> <span id="mode-label">Dark</span></span>
+    </div>
+
     <header>
         <h1>Generative AI Disclosure Generator</h1>
         <p class="subtitle">
@@ -376,7 +59,7 @@
                 <input type="text" id="tools" placeholder="e.g. ChatGPT-4, GitHub Copilot, Grammarly">
                 <span class="help-text">Comma separated list of tools.</span>
             </div>
-            
+
             <div>
                 <label>Comments & Details</label>
                 <div id="comments-container"></div>
@@ -403,13 +86,12 @@
                     <input type="checkbox" id="render-star">
                     <span>No Title (<code>\AIDrenderDeclaration*</code>)</span>
                 </label>
-    
+
                 <div style="display: flex; gap: 15px; margin-top: 15px;">
                     <div>
                         <label for="render-cols">Columns</label>
                         <input type="number" id="render-cols" value="3" min="1" max="6" style="width: 80px;">
                     </div>
-                    <!-- <div style="flex: 1;"> -->
                     <div style="width: 180px;">
                         <label for="render-lang">Language</label>
                         <select id="render-lang">
@@ -433,10 +115,10 @@
                 </div>
             </div>
 
-            <div>                
+            <div>
                 <label for="title-full" style="margin-top:0px">Custom Section Title (Optional)</label>
                 <input type="text" id="title-full" placeholder="Default: Generative AI Disclosure">
-                
+
                 <div class="row" style="margin-top:10px; gap:10px;">
                     <input type="text" id="title-short" placeholder="Short Title (TOC)">
                     <input type="text" id="title-level" placeholder="\section, \chapter...">
@@ -451,9 +133,9 @@
     <div class="card">
         <h2>Taxonomy of Delegated Tasks</h2>
         <p class="help-text" style="margin-bottom: 20px;">Select specific tasks delegated to Artificial Intelligence.</p>
-        
+
         <div class="masonry-grid">
-            
+
             <div class="taxonomy-card">
                 <h3>Conceptualization</h3>
                 <label class="tax-item"><input type="checkbox" value="c:idea" class="tax-check"> Idea generation</label>
@@ -559,7 +241,7 @@
             <span class="btn-caption">Body for <code>7_aidisclose.tex</code> in the NOVAthesis template</span>
         </div>
         <div class="btn-cell">
-            <button type="button" id="overleaf-btn" class="btn-primary" onclick="openInOverleaf()">Compile PDF in Overleaf</button>
+            <button type="button" id="overleaf-btn" class="btn-overleaf" onclick="openInOverleaf()">Compile PDF in Overleaf</button>
             <span class="btn-caption">Opens a ready-to-build project online</span>
         </div>
     </div>
@@ -573,7 +255,7 @@
             <pre id="latex-code"></pre>
         </div>
     </div>
-    
+
     <div class="footer-sponsor">
         <div class="counter-badge" title="Statements generated">
             <span id="counter-value">...</span> statements generated
@@ -589,6 +271,38 @@
 </div>
 
 <script>
+    // --- Light/dark toggle ---
+    // The initial mode is chosen by the early <head> script (stored pref >
+    // OS preference > local time). Here we wire the toggle and keep following
+    // the OS until the user makes an explicit choice.
+    (function() {
+        const root = document.documentElement;
+        function syncLabel(m) {
+            const icon = document.getElementById('mode-icon');
+            const label = document.getElementById('mode-label');
+            if (icon) icon.textContent = m === 'dark' ? '☀' : '🌙';
+            if (label) label.textContent = m === 'dark' ? 'Light' : 'Dark';
+        }
+        function setMode(m, silent) {
+            root.setAttribute('data-mode', m);
+            syncLabel(m);
+            if (!silent) { try { localStorage.setItem('aid_mode', m); } catch (e) {} }
+        }
+        window.toggleMode = function() {
+            setMode(root.getAttribute('data-mode') === 'dark' ? 'light' : 'dark');
+        };
+        // Match the toggle label to whatever the head script already applied.
+        syncLabel(root.getAttribute('data-mode'));
+        // Follow OS changes only while the user hasn't set an explicit preference.
+        if (window.matchMedia) {
+            matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                let stored = null;
+                try { stored = localStorage.getItem('aid_mode'); } catch (_) {}
+                if (!stored) setMode(e.matches ? 'dark' : 'light', true);
+            });
+        }
+    })();
+
     // --- Utils ---
     function escapeLatex(str) {
         if (!str) return "";
@@ -629,16 +343,16 @@
     function getFormData() {
         const authors = escapeLatex(document.getElementById('authors').value.trim());
         const tools = escapeLatex(document.getElementById('tools').value.trim());
-        
+
         // Options
         const autobib = document.getElementById('opt-autobib').checked;
         const nocite = document.getElementById('opt-nocite').checked;
-        
+
         // Title Config
         const titleFull = escapeLatex(document.getElementById('title-full').value.trim());
         const titleShort = escapeLatex(document.getElementById('title-short').value.trim());
         const titleLevel = document.getElementById('title-level').value.trim();
-        
+
         // Rendering
         const columns = document.getElementById('render-cols').value || 3;
         const renderStar = document.getElementById('render-star').checked;
@@ -694,7 +408,7 @@
 
     function buildConfiguration(data) {
         let code = "";
-        
+
         // Title
         if(data.titleFull || data.titleLevel) {
             let cmd = "\\AIDdiscloseTitle";
@@ -712,14 +426,14 @@
             });
             code += `\n`;
         }
-        
+
         // Tools
         if(data.tools) {
             code += `\\AIDtoolsUsed{${data.tools}}\n\n`;
         } else {
             code += `\\AIDtoolsUsed{}\n\n`;
         }
-        
+
         // Comments
         data.comments.forEach(c => {
             const env = c.starred ? "AIDcomment*" : "AIDcomment";
@@ -731,19 +445,19 @@
 
     function buildRender(data) {
         const cmd = data.renderStar ? "\\AIDrenderDeclaration*" : "\\AIDrenderDeclaration";
-        
+
         // Build options list for new key-value syntax
         let opts = [];
         if (data.columns && data.columns != 3) opts.push(`ncols=${data.columns}`);
-        
+
         // Only add lang if it is NOT default
         if (data.renderLang && data.renderLang !== 'default') {
             opts.push(`lang=${data.renderLang}`);
         }
-        
+
         if (data.renderLabel) opts.push(`label=${data.renderLabel}`);
 
-        const optStr = opts.length > 0 ? `[${opts.join(',')}]` : ""; 
+        const optStr = opts.length > 0 ? `[${opts.join(',')}]` : "";
         return `${cmd}${optStr}{${data.authors}}`;
     }
 
@@ -859,7 +573,7 @@
 
         displayOutput(code);
     }
-        
+
     function displayOutput(code) {
         document.getElementById('latex-code').textContent = code;
         const area = document.getElementById('output-area');
@@ -880,31 +594,19 @@
     // --- Counter API ---
     // Self-hosted Cloudflare Worker (see DEPLOY-counter.md). GET returns the
     // current total; POST increments it and returns the new total.
-    // Replace with your deployed Worker URL:
     const COUNTER_URL = 'https://aidisclose-counter.joao-m-lourenco.workers.dev';
 
     function updateCounterUI(value) {
         const el = document.getElementById('counter-value');
         const badge = document.querySelector('.counter-badge');
-        
-        if(el) {
+        if (el) {
             el.innerText = value;
-            // Add a helpful tooltip
             badge.title = `${value} statements generated`;
-
-            // Logic to hide (match background) or show
-            if (value == 0 || value === '...') {
-                // Invisible to the eye, but selectable
-                badge.style.backgroundColor = 'var(--background)'; 
-                badge.style.color = 'var(--background)';
-            } else {
-                // Visible
-                badge.style.backgroundColor = '#e2e8f0';
-                badge.style.color = 'var(--text-secondary)';
-            }
+            // Hide the badge until we have a real, non-zero count.
+            badge.classList.toggle('counter-hidden', value == 0 || value === '...');
         }
     }
-    
+
     // Show the current global total on load (read-only GET).
     fetch(COUNTER_URL)
         .then(r => r.ok ? r.json() : { count: 0 })

@@ -1,0 +1,45 @@
+/* Theme: Clean & minimal — flat surfaces, hairline borders, tonal buttons. */
+
+[data-theme="minimal"][data-mode="light"] {
+  --bg: #ffffff;
+  --toolbar-bg: rgba(255,255,255,.9);
+  --panel: #ffffff; --panel-border: #e6e6e6;
+  --subpanel: #f8fafc; --subpanel-border: #ececec;
+  --radius: 10px; --radius-sm: 8px;
+  --panel-shadow: none; --backdrop: none;
+  --text: #1a1a1a; --heading: #000; --muted: #6b6b6b;
+  --accent: #2563eb; --accent-grad: #2563eb;
+  --accent-soft: #eef3fe; --accent-ink: #1d4ed8; --accent-ring: rgba(37,99,235,.15);
+  --input-bg: #fff; --input-border: #d8d8d8;
+  --b1-bg: #2563eb; --b1-fg: #fff; --b1-shadow: none;
+  --b2-bg: #eef1f5; --b2-fg: #334155; --b2-border: #dde2e9;
+  --b3-bg: #eef3ea; --b3-fg: #4b6b3a; --b3-border: #d6e2c9; --b3-shadow: none;
+  --b4-bg: #e9f5ee; --b4-fg: #1f7a44; --b4-border: #c9e6d4; --b4-shadow: none;
+  --danger-bg: #fee2e2; --danger-fg: #dc2626; --danger-bg-hover: #fecaca;
+  --code-head-bg: #f0f0f0; --code-head-ink: #444; --code-bg: #fafafa; --code-ink: #1a1a1a; --code-border: #e2e2e2;
+}
+
+[data-theme="minimal"][data-mode="dark"] {
+  --bg: #111111;
+  --toolbar-bg: rgba(17,17,17,.9);
+  --panel: #181818; --panel-border: #2a2a2a;
+  --subpanel: #1d1d1d; --subpanel-border: #2a2a2a;
+  --radius: 10px; --radius-sm: 8px;
+  --panel-shadow: none; --backdrop: none;
+  --text: #e6e6e6; --heading: #fff; --muted: #9a9a9a;
+  --accent: #5b9bff; --accent-grad: #5b9bff;
+  --accent-soft: #182334; --accent-ink: #9ec3ff; --accent-ring: rgba(91,155,255,.22);
+  --input-bg: #141414; --input-border: #333;
+  --b1-bg: #2f6fe0; --b1-fg: #fff; --b1-shadow: none;
+  --b2-bg: #222; --b2-fg: #dcdcdc; --b2-border: #353535;
+  --b3-bg: #1e2a18; --b3-fg: #a8d08a; --b3-border: #32411f; --b3-shadow: none;
+  --b4-bg: #14271c; --b4-fg: #6fd49a; --b4-border: #1f3f2c; --b4-shadow: none;
+  --danger-bg: #3a1a1a; --danger-fg: #fca5a5; --danger-bg-hover: #4d2020;
+  --code-head-bg: #0c0c0c; --code-head-ink: #bbb; --code-bg: #0a0a0a; --code-ink: #e6e6e6; --code-border: #222;
+}
+
+/* Minimal favours stillness over motion. */
+[data-theme="minimal"] .btn-primary:hover,
+[data-theme="minimal"] .btn-novathesis:hover,
+[data-theme="minimal"] .btn-overleaf:hover { transform: none; filter: brightness(.97); }
+[data-theme="minimal"] .btn-secondary:hover { transform: none; }
